@@ -1,6 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 
 public class BJ4949 {
     public static void main(String[] args) throws IOException {
@@ -11,12 +10,10 @@ public class BJ4949 {
             String s = br.readLine();
             if (s.equals("."))
                 break;
-            String ps = getPS(s);
-            String sps = getSPS(s);
-            if (isValid(ps) && isValid(sps))
-                bw.write("YES\n");
+            if (isValid(s))
+                bw.write("yes\n");
             else
-                bw.write("NO\n");
+                bw.write("no\n");
         }
 
         bw.flush();
@@ -24,50 +21,30 @@ public class BJ4949 {
     }
 
     private static boolean isValid(String ps) {
-        if (ps.length() % 2 != 0)
-            return false;
-
-        int sp = 0, ep = 0;
+        Stack<String> stack = new Stack<>();
 
         for (int i = 0 ; i < ps.length() ; i++) {
             String tmp = ps.substring(i, i+1);
-            if (tmp.equals("(") || tmp.equals("["))
-                sp++;
-            else
-                ep++;
-            if (ep > sp)
+            if (stack.isEmpty() && (tmp.equals(")") || tmp.equals("]")))
                 return false;
+            if (tmp.equals("(") || tmp.equals("["))
+                stack.push(tmp);
+            else if (tmp.equals(")")) {
+                if (stack.peek().equals("("))
+                    stack.pop();
+                else
+                    return false;
+            }
+            else if (tmp.equals("]")) {
+                if (stack.peek().equals("["))
+                    stack.pop();
+                else
+                    return false;
+            }
         }
+
+        if (stack.size() > 0)
+            return false;
         return true;
-    }
-
-    private static String getPS(String s) {
-        List<String> list = new ArrayList<>();
-        for (int i = 0 ; i < s.length() ; i++) {
-            String tmp = s.substring(i, i+1);
-            if (tmp.equals("(") || tmp.equals(")"))
-                list.add(tmp);
-        }
-        StringBuilder sb = new StringBuilder();
-        for (String p : list) {
-            sb.append(p);
-        }
-
-        return sb.toString();
-    }
-
-    private static String getSPS(String s) {
-        List<String> list = new ArrayList<>();
-        for (int i = 0 ; i < s.length() ; i++) {
-            String tmp = s.substring(i, i+1);
-            if (tmp.equals("[") || tmp.equals("]"))
-                list.add(tmp);
-        }
-        StringBuilder sb = new StringBuilder();
-        for (String p : list) {
-            sb.append(p);
-        }
-
-        return sb.toString();
     }
 }
