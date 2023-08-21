@@ -14,7 +14,7 @@ public class BJ18870 {
         int[] processedArr = Arrays.stream(inputs).distinct().sorted().toArray();
         HashMap<Integer, Integer> dict = new HashMap<>();
         inputs = Arrays.stream(inputs).boxed().sorted(Collections.reverseOrder()).mapToInt(Integer::intValue).toArray();
-        LinkedList<Integer> list =(LinkedList<Integer>) Arrays.stream(inputs).boxed().toList();
+        LinkedList<Integer> list =(LinkedList<Integer>) Arrays.stream(inputs).boxed().collect(Collectors.toList());
         for(int a : processedArr) {
             dict.put(a, i++);
         }
